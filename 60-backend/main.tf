@@ -152,4 +152,3 @@ resource "aws_autoscaling_policy" "example" {
     target_value = 70.0
   }
 }
-
