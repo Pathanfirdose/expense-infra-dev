@@ -1,20 +1,26 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-      version = "5.66.0"
-    }
-  }
-
-  backend "s3" {
-    bucket = "81s-remote-state"
-    key    = "expense-dev-cdn"
-    region = "us-east-1"
-    dynamodb_table = "81s-locking"
-  }
+resource "aws_instance" "web_east" {
+  provider = aws.east
+  ami      = "ami-123456"
+  instance_type = "t2.micro"
 }
 
-provider "aws" {
-  # Configuration options
-  region = "us-east-1"
+resource "aws_instance" "web_west" {
+  provider = aws.west
+  ami      = "ami-654321"
+  instance_type = "t2.micro"
+}
+
+resource "google_compute_instance" "vm_instance" {
+  name         = "my-google-vm"
+  machine_type = "e2-medium"
+  zone         = "us-central1-a"
+  provider     = google
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+  network_interface {
+    network = "default"
+  }
 }
